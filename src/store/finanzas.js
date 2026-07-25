@@ -232,3 +232,78 @@ export const proyeccionAhorros = computed(() => {
     return { month: m.month, label: m.label, value: total, projected: i > 0 }
   })
 })
+
+// ---- Historial mensual (5 meses anteriores + mes en vista) ----
+// Mismo modelo de "foto" única vigente que la proyección hacia adelante: no hay
+// serie histórica real de ingresos/deudas/ahorro por mes (ver tarea 20 en
+// tasks.md), así que esos tres se reconstruyen hacia atrás con la misma lógica
+// lineal usada para proyectar hacia adelante. Los gastos sí tienen fecha real
+// por transacción, así que su historial se agrega desde `state.gastos`.
+
+function monthsWindowBack(count = 6) {
+  const months = []
+  let monthIndex = state.monthIndex
+  let year = state.year
+  for (let i = 0; i < count; i++) {
+    months.unshift({ monthIndex, year, month: MONTH_SHORT[monthIndex], label: `${MONTH_SHORT[monthIndex]} ${year}` })
+    monthIndex -= 1
+    if (monthIndex < 0) {
+      monthIndex = 11
+      year -= 1
+    }
+  }
+  return months
+}
+
+function gastoTotalDelMes(year, monthIndex) {
+  return state.gastos
+    .filter((g) => {
+      const [y, m] = g.fecha.split('-').map(Number)
+      return y === year && m - 1 === monthIndex
+    })
+    .reduce((a, g) => a + g.monto, 0)
+}
+
+// Los ingresos presupuestados no varían mes a mes en el modelo actual (mismo gap
+// que proyeccionIngresos), así que el historial se ve como una línea constante.
+export const historialIngresos = computed(() => {
+  const months = monthsWindowBack()
+  const last = months.length - 1
+  return months.map((m, i) => ({ month: m.month, label: m.label, value: totalIngreso.value, projected: i < last }))
+})
+
+// Gasto real por transacción: la única serie con historial genuino (no estimado).
+export const historialGastos = computed(() =>
+  monthsWindowBack().map((m) => ({
+    month: m.month, label: m.label, value: gastoTotalDelMes(m.year, m.monthIndex), projected: false,
+  }))
+)
+
+// Reconstruye el saldo de cada deuda hacia atrás sumando el pago que se hizo cada
+// mes (lineal, sin interés — mismo criterio que proyeccionDeudas / gap #21).
+export const historialDeudas = computed(() => {
+  const months = monthsWindowBack()
+  const n = months.length
+  const saldos = state.deudas.map((d) => d.saldo)
+  const values = new Array(n)
+  values[n - 1] = saldos.reduce((a, s) => a + s, 0)
+  for (let i = n - 2; i >= 0; i--) {
+    state.deudas.forEach((d, idx) => { saldos[idx] += d.pagoReal })
+    values[i] = saldos.reduce((a, s) => a + s, 0)
+  }
+  return months.map((m, i) => ({ month: m.month, label: m.label, value: values[i], projected: i < n - 1 }))
+})
+
+// Reconstruye el ahorro acumulado hacia atrás restando el mismo aporte mensual
+// constante usado en proyeccionAhorros, con piso en 0.
+export const historialAhorros = computed(() => {
+  const months = monthsWindowBack()
+  const n = months.length
+  const aporteMensual = Math.max(saldoEstimado.value, 0)
+  const values = new Array(n)
+  values[n - 1] = metaAhorradoTotal.value
+  for (let i = n - 2; i >= 0; i--) {
+    values[i] = Math.max(values[i + 1] - aporteMensual, 0)
+  }
+  return months.map((m, i) => ({ month: m.month, label: m.label, value: values[i], projected: i < n - 1 }))
+})

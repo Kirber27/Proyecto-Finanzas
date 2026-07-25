@@ -6,6 +6,7 @@ const props = defineProps({
   points: { type: Array, required: true }, // [{ month, label, value, projected }]
   color: { type: String, default: 'var(--accent)' },
   formatter: { type: Function, default: fmtCLP },
+  projectedLabel: { type: String, default: 'proyectado' },
 })
 
 const W = 240
@@ -39,7 +40,7 @@ const areaPath = computed(() => {
 })
 
 const summary = computed(() =>
-  props.points.map((p) => `${p.label}: ${props.formatter(p.value)}${p.projected ? ' (proyectado)' : ''}`).join('. ')
+  props.points.map((p) => `${p.label}: ${props.formatter(p.value)}${p.projected ? ` (${props.projectedLabel})` : ''}`).join('. ')
 )
 
 const activeIndex = ref(null)
@@ -95,14 +96,14 @@ const activePoint = computed(() => (activeIndex.value === null ? null : coords.v
         type="button"
         class="spark-hit"
         :style="{ left: `${c.xPct}%`, top: `${c.yPct}%` }"
-        :aria-label="`${c.label}: ${formatter(c.value)}${c.projected ? ' (proyectado)' : ''}`"
+        :aria-label="`${c.label}: ${formatter(c.value)}${c.projected ? ` (${projectedLabel})` : ''}`"
         :aria-pressed="activeIndex === i"
         @click.stop="toggle(i)"
       ></button>
 
       <div v-if="activePoint" class="spark-tooltip" :style="{ left: tooltipLeft }">
         <strong>{{ formatter(activePoint.value) }}</strong>
-        <span>{{ activePoint.label }}{{ activePoint.projected ? ' · proyectado' : '' }}</span>
+        <span>{{ activePoint.label }}{{ activePoint.projected ? ` · ${projectedLabel}` : '' }}</span>
       </div>
     </div>
 

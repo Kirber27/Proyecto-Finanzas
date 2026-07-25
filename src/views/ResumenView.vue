@@ -6,6 +6,7 @@ import {
   totalIngreso, totalGastoReal, saldoEstimado, tasaAhorro,
   deudaTotal, metaObjetivoTotal, metaAhorradoTotal,
   proyeccionIngresos, proyeccionGastos, proyeccionDeudas, proyeccionAhorros,
+  historialIngresos, historialGastos, historialDeudas, historialAhorros,
 } from '../store/finanzas'
 import { fmtCLP } from '../utils/format'
 
@@ -27,6 +28,13 @@ const proyecciones = computed(() => [
   { key: 'gastos', label: 'Proyección de gastos', value: fmtCLP(totalGastoReal.value), color: 'var(--bad)', points: proyeccionGastos.value },
   { key: 'deudas', label: 'Proyección de deudas', value: fmtCLP(deudaTotal.value), color: 'var(--ink)', points: proyeccionDeudas.value },
   { key: 'ahorros', label: 'Proyección de ahorros', value: fmtCLP(metaAhorradoTotal.value), color: 'var(--good)', points: proyeccionAhorros.value },
+])
+
+const historiales = computed(() => [
+  { key: 'ingresos', label: 'Historial de ingresos', value: fmtCLP(totalIngreso.value), color: 'var(--accent)', points: historialIngresos.value },
+  { key: 'gastos', label: 'Historial de gastos', value: fmtCLP(totalGastoReal.value), color: 'var(--bad)', points: historialGastos.value },
+  { key: 'deudas', label: 'Historial de deudas', value: fmtCLP(deudaTotal.value), color: 'var(--ink)', points: historialDeudas.value },
+  { key: 'ahorros', label: 'Historial de ahorros', value: fmtCLP(metaAhorradoTotal.value), color: 'var(--good)', points: historialAhorros.value },
 ])
 </script>
 
@@ -71,6 +79,15 @@ const proyecciones = computed(() => [
         <p class="eyebrow" style="font-size: 10px; margin-bottom: 4px">{{ p.label }}</p>
         <p style="font-size: 16px; font-weight: 800; color: var(--ink); margin: 0 0 8px">{{ p.value }}</p>
         <ProjectionSparkline :points="p.points" :color="p.color" />
+      </div>
+    </div>
+
+    <p class="eyebrow" style="margin: 18px 0 10px">Historial mensual (últimos 6 meses)</p>
+    <div class="projection-grid">
+      <div v-for="h in historiales" :key="h.key" class="card-fx card-fx-sm" style="padding: 16px">
+        <p class="eyebrow" style="font-size: 10px; margin-bottom: 4px">{{ h.label }}</p>
+        <p style="font-size: 16px; font-weight: 800; color: var(--ink); margin: 0 0 8px">{{ h.value }}</p>
+        <ProjectionSparkline :points="h.points" :color="h.color" projected-label="estimado" />
       </div>
     </div>
   </div>

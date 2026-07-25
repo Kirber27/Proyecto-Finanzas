@@ -150,7 +150,7 @@ function onMontoChange(id, e) {
     padding: 0;
   }
   .presupuesto-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     align-items: start;
   }
   .row-line,
