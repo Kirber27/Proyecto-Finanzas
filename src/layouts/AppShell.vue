@@ -4,7 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import MonthSelector from '../components/MonthSelector.vue'
 import NavIcon from '../components/NavIcon.vue'
-import { authState, logout } from '../store/auth'
+import MobileMenu from '../components/MobileMenu.vue'
+import { authState, displayName, avatarLetter, logout } from '../store/auth'
 
 const route = useRoute()
 const router = useRouter()
@@ -28,12 +29,6 @@ const NAV_ITEMS = [
 const activeTab = computed(() => route.name)
 const tabTitle = computed(() => TAB_TITLES[activeTab.value] || '')
 
-const displayName = computed(() => {
-  const local = authState.email.split('@')[0] || 'Usuario'
-  return local.charAt(0).toUpperCase() + local.slice(1)
-})
-const avatarLetter = computed(() => displayName.value.charAt(0).toUpperCase())
-
 function goTo(name) {
   router.push({ name })
 }
@@ -54,7 +49,7 @@ function onLogout() {
             <p class="eyebrow" style="letter-spacing: 0.08em; margin-bottom: 4px">{{ tabTitle }}</p>
             <h1 style="font-size: 20px; font-weight: 800; color: var(--ink); margin: 0">Hola, {{ displayName }}</h1>
           </div>
-          <ThemeToggle />
+          <MobileMenu />
         </div>
       </header>
 
