@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 8px; }
+  </style>
+</helmet>
+
+<div style="min-height:100vh;background:#F1F2F4;padding:40px 20px 90px;display:flex;flex-direction:column;align-items:center;gap:28px;font-family:'Inter',system-ui,sans-serif;box-sizing:border-box;">
+
+  <div style="display:flex;gap:6px;background:#fff;padding:5px;border-radius:12px;box-shadow:0 2px 10px rgba(20,22,40,0.08);">
+    <button onClick="{{ goLogin }}" style="{{ loginPillStyle }}">Login</button>
+    <button onClick="{{ goMobileScreen }}" style="{{ mobilePillStyle }}">Mobile · App</button>
+    <button onClick="{{ goDesktopScreen }}" style="{{ desktopPillStyle }}">Desktop</button>
+  </div>
+
+  <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+    <div style="width:1040px;max-width:100%;height:660px;max-height:85vh;background:{{ c.bg }};border-radius:24px;box-shadow:{{ c.shadow }};overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;">
+      <div style="background:linear-gradient(135deg, {{ c.accent }}, oklch(42% 0.15 305));display:flex;flex-direction:column;justify-content:space-between;padding:48px;color:#fff;position:relative;overflow:hidden;">
+        <div style="position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,0.08);top:-100px;right:-100px;"></div>
+        <div style="position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.06);bottom:-60px;left:-60px;"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;">F</div>
+          <h1 style="font-size:28px;font-weight:800;margin:24px 0 8px;">Finanzas</h1>
+          <p style="font-size:14.5px;line-height:1.6;opacity:0.85;max-width:320px;margin:0;">Tu sistema financiero personal: presupuesto, deudas, metas y gastos en un solo lugar.</p>
+        </div>
+        <p style="position:relative;z-index:1;font-size:12px;opacity:0.7;margin:0;">© 2026 Finanzas</p>
+      </div>
+      <div style="padding:52px 56px;display:flex;flex-direction:column;justify-content:center;position:relative;box-sizing:border-box;">
+        <div style="position:absolute;top:22px;right:24px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:12px;color:{{ c.inkSoft }};font-weight:600;">{{ themeToggleLabel }}</span>
+          <button onClick="{{ toggleTheme }}" style="position:relative;width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;padding:0;background:{{ themeTrackBg }};transition:background .2s;">
+            <span style="position:absolute;top:2px;left:{{ themeThumbLeft }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);transition:left .2s;"></span>
+          </button>
+        </div>
+        <h2 style="font-size:22px;font-weight:700;color:{{ c.ink }};margin:0 0 6px;">Bienvenido de vuelta</h2>
+        <p style="font-size:14px;color:{{ c.inkSoft }};margin:0 0 26px;">Ingresa tus datos para continuar</p>
+
+        <label style="font-size:11.5px;font-weight:700;color:{{ c.inkSoft }};text-transform:uppercase;letter-spacing:.04em;">Correo electrónico</label>
+        <input type="email" value="{{ loginEmail }}" onChange="{{ setLoginEmail }}" placeholder="tucorreo@ejemplo.com" style="margin:6px 0 16px;padding:12px 14px;border-radius:10px;border:1.5px solid {{ c.border }};background:{{ c.inputBg }};color:{{ c.ink }};font-size:14.5px;font-family:inherit;box-sizing:border-box;" />
+
+        <label style="font-size:11.5px;font-weight:700;color:{{ c.inkSoft }};text-transform:uppercase;letter-spacing:.04em;">Contraseña</label>
+        <div style="position:relative;margin:6px 0 10px;">
+          <input type="{{ passwordFieldType }}" value="{{ loginPassword }}" onChange="{{ setLoginPassword }}" placeholder="••••••••" style="width:100%;padding:12px 52px 12px 14px;border-radius:10px;border:1.5px solid {{ c.border }};background:{{ c.inputBg }};color:{{ c.ink }};font-size:14.5px;font-family:inherit;box-sizing:border-box;" />
+          <button onClick="{{ toggleShowPassword }}" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:{{ c.accent }};font-size:12px;font-weight:700;cursor:pointer;">{{ showPasswordLabel }}</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:0 0 22px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:{{ c.inkSoft }};"><input type="checkbox" style="accent-color:{{ c.accent }};" /> Recuérdame</label>
+          <a href="#" style="font-size:13px;color:{{ c.accent }};font-weight:600;text-decoration:none;">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button style="padding:13px;border:none;border-radius:10px;background:{{ c.accent }};color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">Iniciar sesión</button>
+
+        <div style="display:flex;align-items:center;gap:12px;margin:22px 0;">
+          <div style="flex:1;height:1px;background:{{ c.border }};"></div>
+          <span style="font-size:12px;color:{{ c.inkFaint }};">o</span>
+          <div style="flex:1;height:1px;background:{{ c.border }};"></div>
+        </div>
+
+        <button style="padding:12px;border:1.5px solid {{ c.border }};border-radius:10px;background:transparent;color:{{ c.ink }};font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Crear cuenta nueva</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+    <div style="width:390px;height:780px;border-radius:32px;overflow:hidden;background:{{ c.bg }};box-shadow:{{ c.shadow }};display:flex;flex-direction:column;position:relative;">
+      <div style="padding:22px 20px 14px;flex-shrink:0;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <p style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 4px;">{{ tabTitle }}</p>
+            <h1 style="font-size:20px;font-weight:800;color:{{ c.ink }};margin:0;">Hola, Ignacio</h1>
+          </div>
+          <button onClick="{{ toggleTheme }}" style="position:relative;width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;padding:0;flex-shrink:0;margin-top:4px;background:{{ themeTrackBg }};">
+            <span style="position:absolute;top:2px;left:{{ themeThumbLeft }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+          </button>
+        </div>
+      </div>
+
+      <div style="flex:1;overflow-y:auto;">
+        <sc-if value="{{ isResumen }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:0 20px 14px;display:flex;align-items:center;justify-content:space-between;background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:8px 6px;box-shadow:{{ c.shadowSm }};">
+            <button onClick="{{ prevMonth }}" style="background:none;border:none;font-size:16px;color:{{ c.ink }};cursor:pointer;padding:6px 14px;font-weight:700;">‹</button>
+            <span style="font-size:13px;font-weight:700;color:{{ c.ink }};">{{ monthLabel }}</span>
+            <button onClick="{{ nextMonth }}" style="background:none;border:none;font-size:16px;color:{{ c.ink }};cursor:pointer;padding:6px 14px;font-weight:700;">›</button>
+          </div>
+          <div style="margin:0 20px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Ingresos</p>
+              <p style="font-size:17px;font-weight:800;color:{{ c.ink }};margin:0;font-variant-numeric:tabular-nums;">{{ totalIngresoFmt }}</p>
+            </div>
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Gasto real</p>
+              <p style="font-size:17px;font-weight:800;color:{{ gastoRealColor }};margin:0;font-variant-numeric:tabular-nums;">{{ totalGastoRealFmt }}</p>
+            </div>
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Saldo estimado</p>
+              <p style="font-size:17px;font-weight:800;color:{{ saldoColor }};margin:0;font-variant-numeric:tabular-nums;">{{ saldoFmt }}</p>
+            </div>
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Deuda total</p>
+              <p style="font-size:17px;font-weight:800;color:{{ c.ink }};margin:0;font-variant-numeric:tabular-nums;">{{ deudaTotalFmt }}</p>
+            </div>
+          </div>
+          <div style="margin:0 20px 14px;background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:18px;box-shadow:{{ c.shadowSm }};">
+            <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 10px;">Tasa de ahorro</p>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+              <span style="font-size:24px;font-weight:800;color:{{ tasaAhorroColor }};">{{ tasaAhorroLabel }}</span>
+              <span style="font-size:11px;color:{{ c.inkFaint }};">meta: 20%</span>
+            </div>
+            <div style="height:8px;border-radius:6px;background:{{ c.cardAlt }};overflow:hidden;">
+              <div style="height:100%;border-radius:6px;background:{{ tasaAhorroColor }};width:{{ tasaAhorroWidth }};"></div>
+            </div>
+          </div>
+          <div style="margin:0 20px 8px;background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:18px;box-shadow:{{ c.shadowSm }};">
+            <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 10px;">Metas de ahorro</p>
+            <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:{{ c.ink }};margin-bottom:6px;">
+              <span>{{ metaAhorradoTotalFmt }} ahorrados</span>
+              <span style="color:{{ c.inkFaint }};font-weight:600;">de {{ metaObjTotalFmt }}</span>
+            </div>
+            <div style="height:8px;border-radius:6px;background:{{ c.cardAlt }};overflow:hidden;">
+              <div style="height:100%;border-radius:6px;background:{{ c.accent }};width:{{ metaPctWidth }};"></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isPresupuesto }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:0 20px 14px;display:flex;align-items:center;justify-content:space-between;background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:8px 6px;box-shadow:{{ c.shadowSm }};">
+            <button onClick="{{ prevMonth }}" style="background:none;border:none;font-size:16px;color:{{ c.ink }};cursor:pointer;padding:6px 14px;font-weight:700;">‹</button>
+            <span style="font-size:13px;font-weight:700;color:{{ c.ink }};">{{ monthLabel }}</span>
+            <button onClick="{{ nextMonth }}" style="background:none;border:none;font-size:16px;color:{{ c.ink }};cursor:pointer;padding:6px 14px;font-weight:700;">›</button>
+          </div>
+          <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 20px 8px;">Ingresos mensuales</p>
+          <div style="margin:0 20px 16px;background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;overflow:hidden;box-shadow:{{ c.shadowSm }};">
+            <sc-for list="{{ ingresoRows }}" as="row" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;">
+                <div style="flex:1;font-size:13.5px;font-weight:600;color:{{ c.ink }};">{{ row.nombre }}</div>
+                <input type="number" value="{{ row.monto }}" onChange="{{ row.onChange }}" style="width:104px;text-align:right;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:13px;font-weight:700;background:{{ c.inputBg }};color:{{ c.accent }};font-family:inherit;box-sizing:border-box;" />
+              </div>
+            </sc-for>
+            <div style="display:flex;justify-content:space-between;padding:12px 16px;background:{{ c.accent }};color:#fff;font-weight:700;font-size:13px;">
+              <span>Total ingresos</span><span>{{ totalIngresoFmt }}</span>
+            </div>
+          </div>
+          <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 20px 8px;">Gastos presupuestados</p>
+          <div style="margin:0 20px 8px;background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;overflow:hidden;box-shadow:{{ c.shadowSm }};">
+            <sc-for list="{{ gastoRows }}" as="row" hint-placeholder-count="6">
+              <div style="padding:11px 16px 10px;border-top:1px solid {{ c.border }};">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                  <div style="flex:1;font-size:13.5px;font-weight:600;color:{{ c.ink }};">{{ row.nombre }}</div>
+                  <input type="number" value="{{ row.monto }}" onChange="{{ row.onChange }}" style="width:104px;text-align:right;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:13px;font-weight:700;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:10.5px;color:{{ c.inkFaint }};margin-bottom:4px;">
+                  <span>Gasto real: {{ row.realFmt }}</span><span>{{ row.pctLabel }}</span>
+                </div>
+                <div style="height:6px;border-radius:4px;background:{{ c.cardAlt }};overflow:hidden;">
+                  <div style="height:100%;border-radius:4px;background:{{ row.barColor }};width:{{ row.pctWidth }};"></div>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display:flex;justify-content:space-between;padding:12px 16px;background:{{ c.ink }};color:{{ c.bg }};font-weight:700;font-size:13px;">
+              <span>Total presupuestado</span><span>{{ totalGastoPresupFmt }}</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isDeudas }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:14px 20px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Deuda total</p>
+              <p style="font-size:17px;font-weight:800;color:{{ c.bad }};margin:0;font-variant-numeric:tabular-nums;">{{ deudaTotalFmt }}</p>
+            </div>
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Pago mínimo</p>
+              <p style="font-size:17px;font-weight:800;color:{{ c.ink }};margin:0;font-variant-numeric:tabular-nums;">{{ pagoMinTotalFmt }}</p>
+            </div>
+          </div>
+          <sc-for list="{{ deudas }}" as="d" hint-placeholder-count="2">
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:16px;margin:0 20px 12px;box-shadow:{{ c.shadowSm }};">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px;">
+                <input value="{{ d.nombre }}" onChange="{{ d.onNombre }}" style="font-size:15px;font-weight:700;color:{{ c.ink }};border:none;background:none;padding:0;flex:1;font-family:inherit;" />
+                <button onClick="{{ d.onDelete }}" style="background:none;border:none;color:{{ c.inkFaint }};font-size:15px;cursor:pointer;">✕</button>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Tipo</label>
+                  <select value="{{ d.tipo }}" onChange="{{ d.onTipo }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                    <sc-for list="{{ deudaTipos }}" as="t"><option value="{{ t }}">{{ t }}</option></sc-for>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Estado</label>
+                  <select value="{{ d.estado }}" onChange="{{ d.onEstado }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                    <sc-for list="{{ estados }}" as="e"><option value="{{ e }}">{{ e }}</option></sc-for>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Saldo actual</label>
+                  <input type="number" value="{{ d.saldo }}" onChange="{{ d.onSaldo }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Tasa mensual %</label>
+                  <input type="number" step="0.1" value="{{ d.tasa }}" onChange="{{ d.onTasa }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Pago mínimo</label>
+                  <input type="number" value="{{ d.pagoMin }}" onChange="{{ d.onPagoMin }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Pago que harás</label>
+                  <input type="number" value="{{ d.pagoReal }}" onChange="{{ d.onPagoReal }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+                <span style="background:{{ d.badgeBg }};color:{{ d.badgeFg }};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;">{{ d.estado }}</span>
+                <span style="font-size:11px;color:{{ c.inkFaint }};">{{ d.mesesLabel }}</span>
+              </div>
+            </div>
+          </sc-for>
+          <button onClick="{{ addDeuda }}" style="width:calc(100% - 40px);margin:0 20px 12px;background:{{ c.accent }};color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">+ Agregar deuda</button>
+        </sc-if>
+
+        <sc-if value="{{ isMetas }}" hint-placeholder-val="{{ true }}">
+          <sc-for list="{{ metas }}" as="m" hint-placeholder-count="2">
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:16px;margin:14px 20px 12px;box-shadow:{{ c.shadowSm }};">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px;">
+                <input value="{{ m.nombre }}" onChange="{{ m.onNombre }}" style="font-size:15px;font-weight:700;color:{{ c.ink }};border:none;background:none;padding:0;flex:1;font-family:inherit;" />
+                <button onClick="{{ m.onDelete }}" style="background:none;border:none;color:{{ c.inkFaint }};font-size:15px;cursor:pointer;">✕</button>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Monto objetivo</label>
+                  <input type="number" value="{{ m.objetivo }}" onChange="{{ m.onObjetivo }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+                <div>
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Ahorrado</label>
+                  <input type="number" value="{{ m.ahorrado }}" onChange="{{ m.onAhorrado }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+                <div style="grid-column:1 / -1;">
+                  <label style="font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:3px;">Fecha objetivo</label>
+                  <input type="date" value="{{ m.fecha }}" onChange="{{ m.onFecha }}" style="width:100%;padding:7px 8px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:12.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                </div>
+              </div>
+              <div style="margin-top:12px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:{{ c.accent }};margin-bottom:4px;">
+                  <span>{{ m.pctLabel }}</span>
+                  <span style="color:{{ c.inkFaint }};font-weight:600;">faltan {{ m.faltanteFmt }}</span>
+                </div>
+                <div style="height:7px;border-radius:5px;background:{{ c.cardAlt }};overflow:hidden;">
+                  <div style="height:100%;border-radius:5px;background:{{ c.accent }};width:{{ m.pctWidth }};"></div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+          <button onClick="{{ addMeta }}" style="width:calc(100% - 40px);margin:0 20px 12px;background:{{ c.accent }};color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">+ Agregar meta</button>
+        </sc-if>
+
+        <sc-if value="{{ isGastos }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:14px 20px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Hoy</p>
+              <p style="font-size:17px;font-weight:800;color:{{ c.ink }};margin:0;font-variant-numeric:tabular-nums;">{{ gastoHoyFmt }}</p>
+            </div>
+            <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:14px;box-shadow:{{ c.shadowSm }};">
+              <p style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Este mes</p>
+              <p style="font-size:17px;font-weight:800;color:{{ c.ink }};margin:0;font-variant-numeric:tabular-nums;">{{ gastoMesFmt }}</p>
+            </div>
+          </div>
+          <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:16px;margin:0 20px 16px;box-shadow:{{ c.shadowSm }};">
+            <div style="display:flex;gap:10px;margin-bottom:12px;">
+              <div style="flex:1;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Monto</label><input type="number" value="{{ gastoForm.monto }}" onChange="{{ setGastoMonto }}" placeholder="0" style="width:100%;padding:9px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:13.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" /></div>
+              <div style="flex:1;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Fecha</label><input type="date" value="{{ gastoForm.fecha }}" onChange="{{ setGastoFecha }}" style="width:100%;padding:9px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:13.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" /></div>
+            </div>
+            <div style="margin-bottom:12px;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Descripción</label><input type="text" value="{{ gastoForm.desc }}" onChange="{{ setGastoDesc }}" placeholder="Ej: Almuerzo, bencina..." style="width:100%;padding:9px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:13.5px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" /></div>
+            <div style="display:flex;gap:10px;margin-bottom:14px;">
+              <div style="flex:1;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Categoría</label>
+                <select value="{{ gastoForm.cat }}" onChange="{{ setGastoCat }}" style="width:100%;padding:9px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                  <sc-for list="{{ gastoCats }}" as="cat"><option value="{{ cat }}">{{ cat }}</option></sc-for>
+                </select>
+              </div>
+              <div style="flex:1;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Medio de pago</label>
+                <select value="{{ gastoForm.medio }}" onChange="{{ setGastoMedio }}" style="width:100%;padding:9px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                  <sc-for list="{{ medios }}" as="med"><option value="{{ med }}">{{ med }}</option></sc-for>
+                </select>
+              </div>
+            </div>
+            <button onClick="{{ addGasto }}" style="width:100%;background:{{ c.accent }};color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Agregar gasto</button>
+          </div>
+          <sc-for list="{{ gastoGroups }}" as="grp" hint-placeholder-count="2">
+            <div style="margin:0 20px;">
+              <div style="display:flex;justify-content:space-between;padding:6px 2px;font-size:12px;font-weight:700;color:{{ c.ink }};text-transform:capitalize;">
+                <span>{{ grp.label }}</span><span style="color:{{ c.inkFaint }};font-weight:600;">{{ grp.totalFmt }}</span>
+              </div>
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;overflow:hidden;box-shadow:{{ c.shadowSm }};margin-bottom:14px;">
+                <sc-for list="{{ grp.items }}" as="g" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;">
+                    <span style="width:8px;height:8px;border-radius:50%;background:{{ g.dot }};flex-shrink:0;"></span>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:13.5px;font-weight:600;color:{{ c.ink }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ g.desc }}</div>
+                      <div style="font-size:10.5px;color:{{ c.inkFaint }};">{{ g.meta }}</div>
+                    </div>
+                    <div style="font-weight:700;font-size:13.5px;color:{{ c.bad }};white-space:nowrap;">{{ g.montoFmt }}</div>
+                    <button onClick="{{ g.onDelete }}" style="background:none;border:none;color:{{ c.inkFaint }};font-size:12px;cursor:pointer;">✕</button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </sc-if>
+      </div>
+
+      <div style="flex-shrink:0;display:flex;border-top:1px solid {{ c.border }};background:{{ c.bg }};padding:8px 4px 12px;">
+        <button onClick="{{ goResumen }}" style="flex:1;background:none;border:none;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ resumenNavColor }};font-family:inherit;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="20" x2="4" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="20" y1="20" x2="20" y2="14"/></svg>
+          <span style="font-size:9.5px;font-weight:700;">Resumen</span>
+        </button>
+        <button onClick="{{ goPresupuesto }}" style="flex:1;background:none;border:none;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ presupuestoNavColor }};font-family:inherit;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M16 13h.01"/><path d="M3 10h18"/></svg>
+          <span style="font-size:9.5px;font-weight:700;">Presupuesto</span>
+        </button>
+        <button onClick="{{ goDeudas }}" style="flex:1;background:none;border:none;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ deudasNavColor }};font-family:inherit;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span style="font-size:9.5px;font-weight:700;">Deudas</span>
+        </button>
+        <button onClick="{{ goMetas }}" style="flex:1;background:none;border:none;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ metasNavColor }};font-family:inherit;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
+          <span style="font-size:9.5px;font-weight:700;">Metas</span>
+        </button>
+        <button onClick="{{ goGastos }}" style="flex:1;background:none;border:none;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ gastosNavColor }};font-family:inherit;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span style="font-size:9.5px;font-weight:700;">Gastos</span>
+        </button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="width:1280px;max-width:100%;height:760px;max-height:88vh;border-radius:20px;overflow:hidden;background:{{ c.bg }};box-shadow:{{ c.shadow }};display:flex;">
+      <div style="width:236px;flex-shrink:0;background:{{ c.cardAlt }};border-right:1px solid {{ c.border }};display:flex;flex-direction:column;padding:22px 14px;box-sizing:border-box;">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 8px;margin-bottom:28px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:{{ c.accent }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">F</div>
+          <span style="font-size:15.5px;font-weight:800;color:{{ c.ink }};">Finanzas</span>
+        </div>
+        <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
+          <button onClick="{{ goResumen }}" style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;border:none;background:{{ resumenSideBg }};color:{{ resumenSideColor }};font-size:13.5px;font-weight:600;cursor:pointer;text-align:left;font-family:inherit;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="20" x2="4" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="20" y1="20" x2="20" y2="14"/></svg>
+            Resumen
+          </button>
+          <button onClick="{{ goPresupuesto }}" style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;border:none;background:{{ presupuestoSideBg }};color:{{ presupuestoSideColor }};font-size:13.5px;font-weight:600;cursor:pointer;text-align:left;font-family:inherit;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M16 13h.01"/><path d="M3 10h18"/></svg>
+            Presupuesto
+          </button>
+          <button onClick="{{ goDeudas }}" style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;border:none;background:{{ deudasSideBg }};color:{{ deudasSideColor }};font-size:13.5px;font-weight:600;cursor:pointer;text-align:left;font-family:inherit;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Deudas
+          </button>
+          <button onClick="{{ goMetas }}" style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;border:none;background:{{ metasSideBg }};color:{{ metasSideColor }};font-size:13.5px;font-weight:600;cursor:pointer;text-align:left;font-family:inherit;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
+            Metas
+          </button>
+          <button onClick="{{ goGastos }}" style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;border:none;background:{{ gastosSideBg }};color:{{ gastosSideColor }};font-size:13.5px;font-weight:600;cursor:pointer;text-align:left;font-family:inherit;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Gastos
+          </button>
+        </nav>
+        <div style="border-top:1px solid {{ c.border }};padding-top:14px;display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:{{ c.accentSoft }};color:{{ c.accent }};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">I</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12.5px;font-weight:700;color:{{ c.ink }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Ignacio</div>
+            <div style="font-size:10.5px;color:{{ c.inkFaint }};">Cuenta personal</div>
+          </div>
+          <button onClick="{{ toggleTheme }}" style="position:relative;width:38px;height:21px;border-radius:999px;border:none;cursor:pointer;padding:0;flex-shrink:0;background:{{ themeTrackBg }};">
+            <span style="position:absolute;top:2px;left:{{ themeThumbLeftSm }};width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+          </button>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid {{ c.border }};flex-shrink:0;box-sizing:border-box;">
+          <div>
+            <h1 style="font-size:19px;font-weight:800;color:{{ c.ink }};margin:0;">{{ tabTitle }}</h1>
+            <p style="font-size:12px;color:{{ c.inkFaint }};margin:4px 0 0;">Panel de control financiero</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:{{ c.cardAlt }};border:1px solid {{ c.border }};border-radius:10px;padding:4px 6px;">
+            <button onClick="{{ prevMonth }}" style="background:none;border:none;font-size:15px;color:{{ c.ink }};cursor:pointer;padding:4px 10px;font-weight:700;">‹</button>
+            <span style="font-size:13px;font-weight:700;color:{{ c.ink }};min-width:110px;text-align:center;">{{ monthLabel }}</span>
+            <button onClick="{{ nextMonth }}" style="background:none;border:none;font-size:15px;color:{{ c.ink }};cursor:pointer;padding:4px 10px;font-weight:700;">›</button>
+          </div>
+        </div>
+
+        <div style="flex:1;overflow-y:auto;padding:26px 32px;box-sizing:border-box;">
+          <sc-if value="{{ isResumen }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:18px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 8px;">Ingresos presupuestados</p>
+                <p style="font-size:22px;font-weight:800;color:{{ c.ink }};margin:0;font-variant-numeric:tabular-nums;">{{ totalIngresoFmt }}</p>
+              </div>
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:18px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 8px;">Gasto real del mes</p>
+                <p style="font-size:22px;font-weight:800;color:{{ gastoRealColor }};margin:0;font-variant-numeric:tabular-nums;">{{ totalGastoRealFmt }}</p>
+              </div>
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:18px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 8px;">Saldo estimado</p>
+                <p style="font-size:22px;font-weight:800;color:{{ saldoColor }};margin:0;font-variant-numeric:tabular-nums;">{{ saldoFmt }}</p>
+              </div>
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:18px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 8px;">Deuda total</p>
+                <p style="font-size:22px;font-weight:800;color:{{ c.ink }};margin:0;font-variant-numeric:tabular-nums;">{{ deudaTotalFmt }}</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:22px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 12px;">Tasa de ahorro</p>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
+                  <span style="font-size:30px;font-weight:800;color:{{ tasaAhorroColor }};">{{ tasaAhorroLabel }}</span>
+                  <span style="font-size:12px;color:{{ c.inkFaint }};">meta: 20%</span>
+                </div>
+                <div style="height:9px;border-radius:6px;background:{{ c.cardAlt }};overflow:hidden;">
+                  <div style="height:100%;border-radius:6px;background:{{ tasaAhorroColor }};width:{{ tasaAhorroWidth }};"></div>
+                </div>
+              </div>
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:22px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 12px;">Metas de ahorro</p>
+                <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:{{ c.ink }};margin-bottom:8px;">
+                  <span>{{ metaAhorradoTotalFmt }} ahorrados</span>
+                  <span style="color:{{ c.inkFaint }};font-weight:600;">de {{ metaObjTotalFmt }}</span>
+                </div>
+                <div style="height:9px;border-radius:6px;background:{{ c.cardAlt }};overflow:hidden;">
+                  <div style="height:100%;border-radius:6px;background:{{ c.accent }};width:{{ metaPctWidth }};"></div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPresupuesto }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+              <div>
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 10px;">Ingresos mensuales</p>
+                <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;overflow:hidden;box-shadow:{{ c.shadowSm }};">
+                  <sc-for list="{{ ingresoRows }}" as="row" hint-placeholder-count="3">
+                    <div style="display:flex;align-items:center;gap:10px;padding:13px 18px;border-top:1px solid {{ c.border }};">
+                      <div style="flex:1;font-size:14px;font-weight:600;color:{{ c.ink }};">{{ row.nombre }}</div>
+                      <input type="number" value="{{ row.monto }}" onChange="{{ row.onChange }}" style="width:130px;text-align:right;padding:9px 10px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:14px;font-weight:700;background:{{ c.inputBg }};color:{{ c.accent }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                  </sc-for>
+                  <div style="display:flex;justify-content:space-between;padding:14px 18px;background:{{ c.accent }};color:#fff;font-weight:700;font-size:14px;">
+                    <span>Total ingresos</span><span>{{ totalIngresoFmt }}</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 10px;">Gastos presupuestados</p>
+                <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;overflow:hidden;box-shadow:{{ c.shadowSm }};">
+                  <sc-for list="{{ gastoRows }}" as="row" hint-placeholder-count="6">
+                    <div style="padding:12px 18px 11px;border-top:1px solid {{ c.border }};">
+                      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <div style="flex:1;font-size:14px;font-weight:600;color:{{ c.ink }};">{{ row.nombre }}</div>
+                        <input type="number" value="{{ row.monto }}" onChange="{{ row.onChange }}" style="width:130px;text-align:right;padding:9px 10px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:14px;font-weight:700;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                      </div>
+                      <div style="display:flex;justify-content:space-between;font-size:11.5px;color:{{ c.inkFaint }};margin-bottom:4px;">
+                        <span>Gasto real: {{ row.realFmt }}</span><span>{{ row.pctLabel }}</span>
+                      </div>
+                      <div style="height:6px;border-radius:4px;background:{{ c.cardAlt }};overflow:hidden;">
+                        <div style="height:100%;border-radius:4px;background:{{ row.barColor }};width:{{ row.pctWidth }};"></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                  <div style="display:flex;justify-content:space-between;padding:14px 18px;background:{{ c.ink }};color:{{ c.bg }};font-weight:700;font-size:14px;">
+                    <span>Total presupuestado</span><span>{{ totalGastoPresupFmt }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isDeudas }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;">
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:16px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Deuda total</p>
+                <p style="font-size:20px;font-weight:800;color:{{ c.bad }};margin:0;">{{ deudaTotalFmt }}</p>
+              </div>
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:16px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Pago mínimo</p>
+                <p style="font-size:20px;font-weight:800;color:{{ c.ink }};margin:0;">{{ pagoMinTotalFmt }}</p>
+              </div>
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:16px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Pago comprometido</p>
+                <p style="font-size:20px;font-weight:800;color:{{ c.accent }};margin:0;">{{ pagoRealTotalFmt }}</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <sc-for list="{{ deudas }}" as="d" hint-placeholder-count="2">
+                <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:18px;box-shadow:{{ c.shadowSm }};">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:14px;">
+                    <input value="{{ d.nombre }}" onChange="{{ d.onNombre }}" style="font-size:15.5px;font-weight:700;color:{{ c.ink }};border:none;background:none;padding:0;flex:1;font-family:inherit;" />
+                    <button onClick="{{ d.onDelete }}" style="background:none;border:none;color:{{ c.inkFaint }};font-size:15px;cursor:pointer;">✕</button>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Tipo</label>
+                      <select value="{{ d.tipo }}" onChange="{{ d.onTipo }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                        <sc-for list="{{ deudaTipos }}" as="t"><option value="{{ t }}">{{ t }}</option></sc-for>
+                      </select>
+                    </div>
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Estado</label>
+                      <select value="{{ d.estado }}" onChange="{{ d.onEstado }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                        <sc-for list="{{ estados }}" as="e"><option value="{{ e }}">{{ e }}</option></sc-for>
+                      </select>
+                    </div>
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Saldo actual</label>
+                      <input type="number" value="{{ d.saldo }}" onChange="{{ d.onSaldo }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Tasa mensual %</label>
+                      <input type="number" step="0.1" value="{{ d.tasa }}" onChange="{{ d.onTasa }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Pago mínimo</label>
+                      <input type="number" value="{{ d.pagoMin }}" onChange="{{ d.onPagoMin }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Pago que harás</label>
+                      <input type="number" value="{{ d.pagoReal }}" onChange="{{ d.onPagoReal }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
+                    <span style="background:{{ d.badgeBg }};color:{{ d.badgeFg }};padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;">{{ d.estado }}</span>
+                    <span style="font-size:12px;color:{{ c.inkFaint }};">{{ d.mesesLabel }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ addDeuda }}" style="margin-top:14px;background:{{ c.accent }};color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">+ Agregar deuda</button>
+          </sc-if>
+
+          <sc-if value="{{ isMetas }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <sc-for list="{{ metas }}" as="m" hint-placeholder-count="2">
+                <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:18px;box-shadow:{{ c.shadowSm }};">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:14px;">
+                    <input value="{{ m.nombre }}" onChange="{{ m.onNombre }}" style="font-size:15.5px;font-weight:700;color:{{ c.ink }};border:none;background:none;padding:0;flex:1;font-family:inherit;" />
+                    <button onClick="{{ m.onDelete }}" style="background:none;border:none;color:{{ c.inkFaint }};font-size:15px;cursor:pointer;">✕</button>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Monto objetivo</label>
+                      <input type="number" value="{{ m.objetivo }}" onChange="{{ m.onObjetivo }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                    <div>
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Ahorrado</label>
+                      <input type="number" value="{{ m.ahorrado }}" onChange="{{ m.onAhorrado }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                    <div style="grid-column:1 / -1;">
+                      <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:{{ c.inkFaint }};font-weight:700;display:block;margin-bottom:4px;">Fecha objetivo</label>
+                      <input type="date" value="{{ m.fecha }}" onChange="{{ m.onFecha }}" style="width:100%;padding:8px 9px;border:1.5px solid {{ c.border }};border-radius:7px;font-size:13px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" />
+                    </div>
+                  </div>
+                  <div style="margin-top:14px;">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:{{ c.accent }};margin-bottom:5px;">
+                      <span>{{ m.pctLabel }}</span>
+                      <span style="color:{{ c.inkFaint }};font-weight:600;">faltan {{ m.faltanteFmt }}</span>
+                    </div>
+                    <div style="height:8px;border-radius:5px;background:{{ c.cardAlt }};overflow:hidden;">
+                      <div style="height:100%;border-radius:5px;background:{{ c.accent }};width:{{ m.pctWidth }};"></div>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ addMeta }}" style="margin-top:14px;background:{{ c.accent }};color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">+ Agregar meta</button>
+          </sc-if>
+
+          <sc-if value="{{ isGastos }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start;">
+              <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:16px;padding:20px;box-shadow:{{ c.shadowSm }};">
+                <p style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 14px;">Agregar gasto</p>
+                <div style="margin-bottom:12px;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Monto</label><input type="number" value="{{ gastoForm.monto }}" onChange="{{ setGastoMonto }}" placeholder="0" style="width:100%;padding:10px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:14px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" /></div>
+                <div style="margin-bottom:12px;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Fecha</label><input type="date" value="{{ gastoForm.fecha }}" onChange="{{ setGastoFecha }}" style="width:100%;padding:10px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:14px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" /></div>
+                <div style="margin-bottom:12px;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Descripción</label><input type="text" value="{{ gastoForm.desc }}" onChange="{{ setGastoDesc }}" placeholder="Ej: Almuerzo, bencina..." style="width:100%;padding:10px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:14px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;" /></div>
+                <div style="margin-bottom:14px;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Categoría</label>
+                  <select value="{{ gastoForm.cat }}" onChange="{{ setGastoCat }}" style="width:100%;padding:10px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:14px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                    <sc-for list="{{ gastoCats }}" as="cat"><option value="{{ cat }}">{{ cat }}</option></sc-for>
+                  </select>
+                </div>
+                <div style="margin-bottom:16px;"><label style="font-size:10px;font-weight:700;color:{{ c.inkFaint }};text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Medio de pago</label>
+                  <select value="{{ gastoForm.medio }}" onChange="{{ setGastoMedio }}" style="width:100%;padding:10px;border:1.5px solid {{ c.border }};border-radius:8px;font-size:14px;background:{{ c.inputBg }};color:{{ c.ink }};font-family:inherit;box-sizing:border-box;">
+                    <sc-for list="{{ medios }}" as="med"><option value="{{ med }}">{{ med }}</option></sc-for>
+                  </select>
+                </div>
+                <button onClick="{{ addGasto }}" style="width:100%;background:{{ c.accent }};color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Agregar gasto</button>
+              </div>
+              <div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+                  <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:16px;box-shadow:{{ c.shadowSm }};">
+                    <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Hoy</p>
+                    <p style="font-size:19px;font-weight:800;color:{{ c.ink }};margin:0;">{{ gastoHoyFmt }}</p>
+                  </div>
+                  <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;padding:16px;box-shadow:{{ c.shadowSm }};">
+                    <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:{{ c.inkFaint }};font-weight:700;margin:0 0 6px;">Este mes</p>
+                    <p style="font-size:19px;font-weight:800;color:{{ c.ink }};margin:0;">{{ gastoMesFmt }}</p>
+                  </div>
+                </div>
+                <sc-for list="{{ gastoGroups }}" as="grp" hint-placeholder-count="2">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;padding:6px 2px;font-size:12.5px;font-weight:700;color:{{ c.ink }};text-transform:capitalize;">
+                      <span>{{ grp.label }}</span><span style="color:{{ c.inkFaint }};font-weight:600;">{{ grp.totalFmt }}</span>
+                    </div>
+                    <div style="background:{{ c.card }};border:1px solid {{ c.border }};border-radius:14px;overflow:hidden;box-shadow:{{ c.shadowSm }};margin-bottom:14px;">
+                      <sc-for list="{{ grp.items }}" as="g" hint-placeholder-count="2">
+                        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;">
+                          <span style="width:8px;height:8px;border-radius:50%;background:{{ g.dot }};flex-shrink:0;"></span>
+                          <div style="flex:1;min-width:0;">
+                            <div style="font-size:14px;font-weight:600;color:{{ c.ink }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ g.desc }}</div>
+                            <div style="font-size:11px;color:{{ c.inkFaint }};">{{ g.meta }}</div>
+                          </div>
+                          <div style="font-weight:700;font-size:14px;color:{{ c.bad }};white-space:nowrap;">{{ g.montoFmt }}</div>
+                          <button onClick="{{ g.onDelete }}" style="background:none;border:none;color:{{ c.inkFaint }};font-size:13px;cursor:pointer;">✕</button>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;login&quot;,&quot;options&quot;:[&quot;login&quot;,&quot;mobile&quot;,&quot;desktop&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;initialTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;light&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'login',
+    theme: 'light',
+    tab: 'resumen',
+    monthIndex: 6,
+    loginEmail: '',
+    loginPassword: '',
+    showPassword: false,
+    presupuesto: [
+      { id: 'p1', nombre: 'Sueldo líquido', tipo: 'ingreso', monto: 1450000 },
+      { id: 'p2', nombre: 'Ingresos adicionales', tipo: 'ingreso', monto: 180000 },
+      { id: 'p3', nombre: 'Otros ingresos', tipo: 'ingreso', monto: 0 },
+      { id: 'p4', nombre: 'Arriendo/Dividendo', tipo: 'gasto', monto: 380000 },
+      { id: 'p5', nombre: 'Servicios básicos', tipo: 'gasto', monto: 95000 },
+      { id: 'p6', nombre: 'Alimentación', tipo: 'gasto', monto: 250000 },
+      { id: 'p7', nombre: 'Transporte', tipo: 'gasto', monto: 60000 },
+      { id: 'p8', nombre: 'Salud', tipo: 'gasto', monto: 40000 },
+      { id: 'p9', nombre: 'Educación', tipo: 'gasto', monto: 0 },
+      { id: 'p10', nombre: 'Entretenimiento', tipo: 'gasto', monto: 45000 },
+      { id: 'p11', nombre: 'Deudas', tipo: 'gasto', monto: 150000 },
+      { id: 'p12', nombre: 'Seguros', tipo: 'gasto', monto: 25000 },
+      { id: 'p13', nombre: 'Otros', tipo: 'gasto', monto: 30000 },
+    ],
+    deudas: [
+      { id: 'd1', nombre: 'Tarjeta Falabella', tipo: 'Tarjeta de crédito', saldo: 850000, tasa: 1.9, pagoMin: 85000, pagoReal: 100000, estado: 'Al día' },
+      { id: 'd2', nombre: 'Crédito de consumo', tipo: 'Crédito de consumo', saldo: 1200000, tasa: 1.2, pagoMin: 65000, pagoReal: 65000, estado: 'Al día' },
+    ],
+    metas: [
+      { id: 'm1', nombre: 'Fondo de emergencia', objetivo: 1500000, ahorrado: 400000, fecha: '2026-12-31' },
+      { id: 'm2', nombre: 'Vacaciones', objetivo: 600000, ahorrado: 120000, fecha: '2027-02-01' },
+    ],
+    gastos: [
+      { id: 'g1', monto: 8500, fecha: '2026-07-24', descripcion: 'Almuerzo', categoria: 'Alimentación', medio: 'Débito' },
+      { id: 'g2', monto: 45000, fecha: '2026-07-24', descripcion: 'Supermercado', categoria: 'Alimentación', medio: 'Crédito' },
+      { id: 'g3', monto: 6000, fecha: '2026-07-23', descripcion: 'Bencina', categoria: 'Transporte', medio: 'Débito' },
+      { id: 'g4', monto: 12000, fecha: '2026-07-22', descripcion: 'Cine', categoria: 'Entretenimiento', medio: 'Crédito' },
+      { id: 'g5', monto: 95000, fecha: '2026-07-20', descripcion: 'Cuenta de luz', categoria: 'Servicios básicos', medio: 'Transferencia' },
+    ],
+    gastoForm: { monto: '', fecha: '2026-07-24', desc: '', cat: 'Alimentación', medio: 'Efectivo' },
+  };
+
+  catHues = { 'Arriendo/Dividendo': 255, 'Servicios básicos': 220, 'Alimentación': 145, 'Transporte': 35, 'Salud': 200, 'Educación': 300, 'Entretenimiento': 340, 'Deudas': 25, 'Seguros': 190, 'Otros': 60 };
+  monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  medios = ['Efectivo', 'Débito', 'Crédito', 'Transferencia'];
+  deudaTipos = ['Tarjeta de crédito', 'Crédito de consumo', 'Línea de crédito', 'Otro'];
+  estados = ['Al día', 'Atrasado', 'Pagada'];
+  tabTitleMap = { resumen: 'Resumen', presupuesto: 'Presupuesto', deudas: 'Deudas', metas: 'Metas y ahorro', gastos: 'Gastos diarios' };
+
+  componentDidMount() {
+    if (this.props.initialScreen) this.setState({ screen: this.props.initialScreen });
+    if (this.props.initialTheme) this.setState({ theme: this.props.initialTheme });
+  }
+
+  todayISO() {
+    const d = new Date();
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  }
+  fmt(n) {
+    const v = Math.round(Number(n) || 0);
+    return '$' + v.toLocaleString('es-CL');
+  }
+  uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  colorForCat(name, dark) {
+    const hue = this.catHues[name] ?? 260;
+    return dark ? `oklch(68% 0.13 ${hue})` : `oklch(56% 0.14 ${hue})`;
+  }
+
+  setScreen(s) { this.setState({ screen: s }); }
+  toggleTheme() { this.setState(s => ({ theme: s.theme === 'light' ? 'dark' : 'light' })); }
+  setTab(t) { this.setState({ tab: t }); }
+  prevMonth() { this.setState(s => ({ monthIndex: (s.monthIndex + 11) % 12 })); }
+  nextMonth() { this.setState(s => ({ monthIndex: (s.monthIndex + 1) % 12 })); }
+
+  updateMonto(id, val) { this.setState(s => ({ presupuesto: s.presupuesto.map(p => p.id === id ? { ...p, monto: Number(val) || 0 } : p) })); }
+
+  updateDeudaField(id, field, val) {
+    const numFields = ['saldo', 'tasa', 'pagoMin', 'pagoReal'];
+    this.setState(s => ({ deudas: s.deudas.map(d => d.id === id ? { ...d, [field]: numFields.includes(field) ? (Number(val) || 0) : val } : d) }));
+  }
+  addDeuda() { this.setState(s => ({ deudas: [...s.deudas, { id: this.uid(), nombre: 'Nueva deuda', tipo: this.deudaTipos[0], saldo: 0, tasa: 0, pagoMin: 0, pagoReal: 0, estado: 'Al día' }] })); }
+  deleteDeuda(id) { this.setState(s => ({ deudas: s.deudas.filter(d => d.id !== id) })); }
+
+  updateMetaField(id, field, val) {
+    const numFields = ['objetivo', 'ahorrado'];
+    this.setState(s => ({ metas: s.metas.map(m => m.id === id ? { ...m, [field]: numFields.includes(field) ? (Number(val) || 0) : val } : m) }));
+  }
+  addMeta() { this.setState(s => ({ metas: [...s.metas, { id: this.uid(), nombre: 'Nueva meta', objetivo: 0, ahorrado: 0, fecha: this.todayISO() }] })); }
+  deleteMeta(id) { this.setState(s => ({ metas: s.metas.filter(m => m.id !== id) })); }
+
+  setGastoForm(field, val) { this.setState(s => ({ gastoForm: { ...s.gastoForm, [field]: val } })); }
+  addGasto() {
+    const f = this.state.gastoForm;
+    if (!f.monto || Number(f.monto) <= 0) return;
+    this.setState(s => ({
+      gastos: [...s.gastos, { id: this.uid(), monto: Number(f.monto), fecha: f.fecha || this.todayISO(), descripcion: f.desc, categoria: f.cat, medio: f.medio }],
+      gastoForm: { ...f, monto: '', desc: '' },
+    }));
+  }
+  deleteGasto(id) { this.setState(s => ({ gastos: s.gastos.filter(g => g.id !== id) })); }
+
+  renderVals() {
+    const s = this.state;
+    const dark = s.theme === 'dark';
+    const c = dark ? {
+      canvasBg: '#EDEEF1', bg: 'oklch(19% 0.012 265)', card: 'oklch(23% 0.013 265)', cardAlt: 'oklch(27% 0.013 265)',
+      border: 'rgba(255,255,255,0.09)', ink: 'oklch(96% 0.004 265)', inkSoft: 'oklch(72% 0.02 265)', inkFaint: 'oklch(55% 0.02 265)',
+      accent: 'oklch(72% 0.15 275)', accentSoft: 'oklch(32% 0.07 275)', good: 'oklch(70% 0.14 150)', goodBg: 'oklch(28% 0.05 150)',
+      bad: 'oklch(70% 0.16 25)', badBg: 'oklch(30% 0.06 25)', shadow: '0 20px 60px rgba(0,0,0,0.5)', shadowSm: '0 2px 10px rgba(0,0,0,0.35)',
+      inputBg: 'oklch(27% 0.013 265)',
+    } : {
+      canvasBg: '#F1F2F4', bg: '#FFFFFF', card: '#FFFFFF', cardAlt: '#F5F6F8',
+      border: 'rgba(20,22,30,0.07)', ink: 'oklch(20% 0.015 265)', inkSoft: 'oklch(48% 0.02 265)', inkFaint: 'oklch(63% 0.015 265)',
+      accent: 'oklch(56% 0.19 275)', accentSoft: 'oklch(94% 0.03 275)', good: 'oklch(55% 0.14 150)', goodBg: 'oklch(94% 0.05 150)',
+      bad: 'oklch(58% 0.18 25)', badBg: 'oklch(95% 0.05 25)', shadow: '0 24px 60px rgba(20,22,40,0.14)', shadowSm: '0 2px 10px rgba(20,22,40,0.06)',
+      inputBg: '#FAFAFB',
+    };
+
+    const totalIngreso = s.presupuesto.filter(p => p.tipo === 'ingreso').reduce((a, p) => a + p.monto, 0);
+    const totalGastoPresup = s.presupuesto.filter(p => p.tipo === 'gasto').reduce((a, p) => a + p.monto, 0);
+    const totalGastoReal = s.gastos.reduce((a, g) => a + g.monto, 0);
+    const saldo = totalIngreso - totalGastoReal;
+    const tasaAhorro = totalIngreso > 0 ? saldo / totalIngreso : 0;
+    const gastoRealPorCat = (nombre) => s.gastos.filter(g => g.categoria === nombre).reduce((a, g) => a + g.monto, 0);
+
+    const ingresoRows = s.presupuesto.filter(p => p.tipo === 'ingreso').map(p => ({
+      id: p.id, nombre: p.nombre, monto: p.monto, onChange: (e) => this.updateMonto(p.id, e.target.value),
+    }));
+    const gastoRows = s.presupuesto.filter(p => p.tipo === 'gasto').map(p => {
+      const real = gastoRealPorCat(p.nombre);
+      const pct = p.monto > 0 ? Math.min(real / p.monto, 1) : (real > 0 ? 1 : 0);
+      const over = p.monto > 0 && real > p.monto;
+      return {
+        id: p.id, nombre: p.nombre, monto: p.monto, realFmt: this.fmt(real),
+        pctLabel: p.monto > 0 ? Math.round(pct * 100) + '%' : '', pctWidth: (pct * 100) + '%',
+        barColor: over ? c.bad : c.accent, onChange: (e) => this.updateMonto(p.id, e.target.value),
+      };
+    });
+
+    const deudaTotal = s.deudas.reduce((a, d) => a + d.saldo, 0);
+    const pagoMinTotal = s.deudas.reduce((a, d) => a + d.pagoMin, 0);
+    const pagoRealTotal = s.deudas.reduce((a, d) => a + d.pagoReal, 0);
+    const deudas = s.deudas.map(d => {
+      const meses = d.pagoReal > 0 ? Math.ceil(d.saldo / d.pagoReal) : null;
+      const badge = d.estado === 'Atrasado' ? { bg: c.badBg, fg: c.bad } : d.estado === 'Pagada' ? { bg: c.accentSoft, fg: c.accent } : { bg: c.goodBg, fg: c.good };
+      return {
+        ...d, saldoFmt: this.fmt(d.saldo), pagoMinFmt: this.fmt(d.pagoMin), pagoRealFmt: this.fmt(d.pagoReal),
+        badgeBg: badge.bg, badgeFg: badge.fg, mesesLabel: meses ? meses + ' meses restantes' : '—',
+        onNombre: (e) => this.updateDeudaField(d.id, 'nombre', e.target.value),
+        onTipo: (e) => this.updateDeudaField(d.id, 'tipo', e.target.value),
+        onEstado: (e) => this.updateDeudaField(d.id, 'estado', e.target.value),
+        onSaldo: (e) => this.updateDeudaField(d.id, 'saldo', e.target.value),
+        onTasa: (e) => this.updateDeudaField(d.id, 'tasa', e.target.value),
+        onPagoMin: (e) => this.updateDeudaField(d.id, 'pagoMin', e.target.value),
+        onPagoReal: (e) => this.updateDeudaField(d.id, 'pagoReal', e.target.value),
+        onDelete: () => this.deleteDeuda(d.id),
+      };
+    });
+
+    const metaObjTotal = s.metas.reduce((a, m) => a + m.objetivo, 0);
+    const metaAhorradoTotal = s.metas.reduce((a, m) => a + m.ahorrado, 0);
+    const metas = s.metas.map(m => {
+      const pct = m.objetivo > 0 ? Math.min(m.ahorrado / m.objetivo, 1) : 0;
+      return {
+        ...m, objetivoFmt: this.fmt(m.objetivo), ahorradoFmt: this.fmt(m.ahorrado), faltanteFmt: this.fmt(Math.max(m.objetivo - m.ahorrado, 0)),
+        pctLabel: Math.round(pct * 100) + '%', pctWidth: (pct * 100) + '%',
+        onNombre: (e) => this.updateMetaField(m.id, 'nombre', e.target.value),
+        onObjetivo: (e) => this.updateMetaField(m.id, 'objetivo', e.target.value),
+        onAhorrado: (e) => this.updateMetaField(m.id, 'ahorrado', e.target.value),
+        onFecha: (e) => this.updateMetaField(m.id, 'fecha', e.target.value),
+        onDelete: () => this.deleteMeta(m.id),
+      };
+    });
+
+    const byDate = {};
+    s.gastos.forEach(g => { (byDate[g.fecha] = byDate[g.fecha] || []).push(g); });
+    const today = this.todayISO();
+    const yesterdayDt = new Date(); yesterdayDt.setDate(yesterdayDt.getDate() - 1);
+    const yesterday = new Date(yesterdayDt.getTime() - yesterdayDt.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    const gastoGroups = Object.keys(byDate).sort((a, b) => b.localeCompare(a)).map(iso => {
+      const items = byDate[iso];
+      const total = items.reduce((a, g) => a + g.monto, 0);
+      let label;
+      if (iso === today) label = 'Hoy';
+      else if (iso === yesterday) label = 'Ayer';
+      else { const [y, mo, da] = iso.split('-').map(Number); label = new Date(y, mo - 1, da).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'short' }); }
+      return {
+        iso, label, totalFmt: this.fmt(total),
+        items: items.map(g => ({ id: g.id, desc: g.descripcion || g.categoria, meta: `${g.categoria} · ${g.medio}`, montoFmt: this.fmt(g.monto), dot: this.colorForCat(g.categoria, dark), onDelete: () => this.deleteGasto(g.id) })),
+      };
+    });
+
+    const gastoCats = s.presupuesto.filter(p => p.tipo === 'gasto').map(p => p.nombre);
+    const pillBase = 'padding:8px 16px;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s ease;';
+    const activePill = pillBase + `background:${c.accent === c.accent ? 'oklch(56% 0.19 275)' : ''};color:#fff;`;
+
+    const navBg = (active) => active ? c.accentSoft : 'transparent';
+    const navFg = (active) => active ? c.accent : c.inkSoft;
+
+    return {
+      screen: s.screen, isLogin: s.screen === 'login', isMobile: s.screen === 'mobile', isDesktop: s.screen === 'desktop',
+      isDark: dark, c,
+      goLogin: () => this.setScreen('login'), goMobileScreen: () => this.setScreen('mobile'), goDesktopScreen: () => this.setScreen('desktop'),
+      loginPillStyle: pillBase + (s.screen === 'login' ? `background:oklch(56% 0.19 275);color:#fff;` : `background:transparent;color:#6b7280;`),
+      mobilePillStyle: pillBase + (s.screen === 'mobile' ? `background:oklch(56% 0.19 275);color:#fff;` : `background:transparent;color:#6b7280;`),
+      desktopPillStyle: pillBase + (s.screen === 'desktop' ? `background:oklch(56% 0.19 275);color:#fff;` : `background:transparent;color:#6b7280;`),
+      toggleTheme: () => this.toggleTheme(),
+      themeToggleLabel: dark ? 'Oscuro' : 'Claro',
+      themeTrackBg: dark ? c.accent : '#D8DBE0',
+      themeThumbLeft: dark ? '22px' : '2px',
+      themeThumbLeftSm: dark ? '19px' : '2px',
+      loginEmail: s.loginEmail, loginPassword: s.loginPassword,
+      setLoginEmail: (e) => this.setState({ loginEmail: e.target.value }),
+      setLoginPassword: (e) => this.setState({ loginPassword: e.target.value }),
+      passwordFieldType: s.showPassword ? 'text' : 'password',
+      showPasswordLabel: s.showPassword ? 'Ocultar' : 'Mostrar',
+      toggleShowPassword: () => this.setState(st => ({ showPassword: !st.showPassword })),
+
+      tab: s.tab, isResumen: s.tab === 'resumen', isPresupuesto: s.tab === 'presupuesto', isDeudas: s.tab === 'deudas', isMetas: s.tab === 'metas', isGastos: s.tab === 'gastos',
+      tabTitle: this.tabTitleMap[s.tab],
+      goResumen: () => this.setTab('resumen'), goPresupuesto: () => this.setTab('presupuesto'), goDeudas: () => this.setTab('deudas'), goMetas: () => this.setTab('metas'), goGastos: () => this.setTab('gastos'),
+      resumenNavColor: navFg(s.tab === 'resumen'), presupuestoNavColor: navFg(s.tab === 'presupuesto'), deudasNavColor: navFg(s.tab === 'deudas'), metasNavColor: navFg(s.tab === 'metas'), gastosNavColor: navFg(s.tab === 'gastos'),
+      resumenSideBg: navBg(s.tab === 'resumen'), resumenSideColor: navFg(s.tab === 'resumen'),
+      presupuestoSideBg: navBg(s.tab === 'presupuesto'), presupuestoSideColor: navFg(s.tab === 'presupuesto'),
+      deudasSideBg: navBg(s.tab === 'deudas'), deudasSideColor: navFg(s.tab === 'deudas'),
+      metasSideBg: navBg(s.tab === 'metas'), metasSideColor: navFg(s.tab === 'metas'),
+      gastosSideBg: navBg(s.tab === 'gastos'), gastosSideColor: navFg(s.tab === 'gastos'),
+
+      monthLabel: this.monthNames[s.monthIndex] + ' 2026', prevMonth: () => this.prevMonth(), nextMonth: () => this.nextMonth(),
+      totalIngresoFmt: this.fmt(totalIngreso), totalGastoPresupFmt: this.fmt(totalGastoPresup), totalGastoRealFmt: this.fmt(totalGastoReal),
+      saldoFmt: this.fmt(saldo), saldoColor: saldo < 0 ? c.bad : c.good, gastoRealColor: totalGastoReal > totalIngreso ? c.bad : c.ink,
+      tasaAhorroLabel: (tasaAhorro * 100).toFixed(1) + '%', tasaAhorroColor: tasaAhorro >= 0.2 ? c.good : c.bad, tasaAhorroWidth: (Math.min(Math.max(tasaAhorro, 0), 1) * 100) + '%',
+      ingresoRows, gastoRows,
+      deudaTotalFmt: this.fmt(deudaTotal), pagoMinTotalFmt: this.fmt(pagoMinTotal), pagoRealTotalFmt: this.fmt(pagoRealTotal),
+      deudas, addDeuda: () => this.addDeuda(), deudaTipos: this.deudaTipos, estados: this.estados,
+      metaObjTotalFmt: this.fmt(metaObjTotal), metaAhorradoTotalFmt: this.fmt(metaAhorradoTotal),
+      metaPctWidth: (metaObjTotal > 0 ? Math.min(metaAhorradoTotal / metaObjTotal, 1) : 0) * 100 + '%',
+      metas, addMeta: () => this.addMeta(),
+      gastoHoyFmt: this.fmt(s.gastos.filter(g => g.fecha === today).reduce((a, g) => a + g.monto, 0)), gastoMesFmt: this.fmt(totalGastoReal),
+      gastoGroups, gastoCats, medios: this.medios,
+      gastoForm: s.gastoForm,
+      setGastoMonto: (e) => this.setGastoForm('monto', e.target.value), setGastoFecha: (e) => this.setGastoForm('fecha', e.target.value),
+      setGastoDesc: (e) => this.setGastoForm('desc', e.target.value), setGastoCat: (e) => this.setGastoForm('cat', e.target.value), setGastoMedio: (e) => this.setGastoForm('medio', e.target.value),
+      addGasto: () => this.addGasto(),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
