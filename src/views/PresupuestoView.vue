@@ -61,27 +61,27 @@ function onMontoChange(id, e) {
 
       <div>
         <p class="eyebrow" style="margin: 0 0 8px">Gastos presupuestados</p>
-        <div class="card-fx card-fx-sm" style="overflow: hidden">
-          <div v-for="(row, i) in gastoRows" :key="row.id" class="gasto-row" :class="{ 'border-top': i > 0 }">
-            <div class="d-flex align-items-center gap-2" style="margin-bottom: 6px">
-              <div style="flex: 1; font-size: 13.5px; font-weight: 600; color: var(--ink)">{{ row.nombre }}</div>
-              <input
-                type="number"
-                :value="row.monto"
-                class="field-input"
-                style="width: 116px; text-align: right; font-weight: 700"
-                @change="onMontoChange(row.id, $event)"
-              />
-            </div>
+        <div class="gasto-grid">
+          <div v-for="row in gastoRows" :key="row.id" class="card-fx card-fx-sm gasto-card">
+            <p class="gasto-card-nombre">{{ row.nombre }}</p>
+            <label class="field-label">Monto</label>
+            <input
+              type="number"
+              :value="row.monto"
+              class="field-input"
+              style="text-align: right; font-weight: 700; margin-bottom: 8px"
+              @change="onMontoChange(row.id, $event)"
+            />
             <div class="d-flex justify-content-between" style="font-size: 10.5px; color: var(--ink-faint); margin-bottom: 4px">
-              <span>Gasto real: {{ row.realFmt }}</span><span>{{ row.pctLabel }}</span>
+              <span>Real: {{ row.realFmt }}</span><span>{{ row.pctLabel }}</span>
             </div>
             <div class="progress-track sm">
               <div class="progress-fill" :style="{ background: row.barColor, width: row.pctWidth }"></div>
             </div>
           </div>
-          <div class="d-flex justify-content-between total-row" style="background: var(--ink); color: var(--bg)">
-            <span>Total presupuestado</span><span>{{ fmtCLP(totalGastoPresupuestado) }}</span>
+          <div class="card-fx card-fx-sm gasto-card gasto-card-total">
+            <p class="eyebrow gasto-total-label">Total presupuestado</p>
+            <p class="gasto-total-value">{{ fmtCLP(totalGastoPresupuestado) }}</p>
           </div>
         </div>
       </div>
@@ -118,9 +118,6 @@ function onMontoChange(id, e) {
 .row-line {
   padding: 11px 16px;
 }
-.gasto-row {
-  padding: 11px 16px 10px;
-}
 .total-row {
   padding: 12px 16px;
   font-weight: 700;
@@ -128,6 +125,41 @@ function onMontoChange(id, e) {
 }
 .border-top {
   border-top: 1px solid var(--border);
+}
+
+.gasto-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.gasto-card {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+}
+.gasto-card-nombre {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gasto-card-total {
+  background: var(--ink);
+  justify-content: center;
+}
+.gasto-total-label {
+  color: var(--bg);
+  opacity: 0.65;
+  margin: 0 0 6px;
+}
+.gasto-total-value {
+  color: var(--bg);
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
 }
 
 .presupuesto-resumen {
@@ -154,13 +186,16 @@ function onMontoChange(id, e) {
     align-items: start;
   }
   .row-line,
-  .gasto-row,
   .total-row {
     padding-left: 18px;
     padding-right: 18px;
   }
   .total-row {
     font-size: 14px;
+  }
+  .gasto-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
   }
   .presupuesto-resumen {
     margin-top: 20px;
