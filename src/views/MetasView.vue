@@ -1,10 +1,10 @@
 <script setup>
 import { computed } from 'vue'
-import { state, addMeta, deleteMeta } from '../store/finanzas'
+import { addMeta, deleteMeta, updateMeta, state, METAS_ESTADOS } from '../store/finanzas'
 import { fmtCLP } from '../utils/format'
 
 const metas = computed(() =>
-  state.metas.map((m) => {
+  state.goals.map((m) => {
     const pct = m.objetivo > 0 ? Math.min(m.ahorrado / m.objetivo, 1) : 0
     return {
       ...m,
@@ -16,10 +16,7 @@ const metas = computed(() =>
 )
 
 function onField(id, field, value) {
-  const row = state.metas.find((m) => m.id === id)
-  if (!row) return
-  const numFields = ['objetivo', 'ahorrado']
-  row[field] = numFields.includes(field) ? Number(value) || 0 : value
+  updateMeta(id, field, value)
 }
 </script>
 
@@ -46,9 +43,15 @@ function onField(id, field, value) {
             <label class="field-label">Ahorrado</label>
             <input type="number" :value="m.ahorrado" class="field-input" @change="onField(m.id, 'ahorrado', $event.target.value)" />
           </div>
-          <div style="grid-column: 1 / -1">
+          <div>
             <label class="field-label">Fecha objetivo</label>
             <input type="date" :value="m.fecha" class="field-input" @change="onField(m.id, 'fecha', $event.target.value)" />
+          </div>
+          <div>
+            <label class="field-label">Estado</label>
+            <select :value="m.estado" class="field-input" @change="onField(m.id, 'estado', $event.target.value)">
+              <option v-for="e in METAS_ESTADOS" :key="e.value" :value="e.value">{{ e.label }}</option>
+            </select>
           </div>
         </div>
 

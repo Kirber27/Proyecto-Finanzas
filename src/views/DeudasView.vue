@@ -1,29 +1,28 @@
 <script setup>
 import { computed } from 'vue'
 import {
-  state, DEUDA_TIPOS, ESTADOS, addDeuda, deleteDeuda,
+  state, ESTADOS, addDeuda, deleteDeuda, updateDeuda,
   deudaTotal, pagoMinTotal, pagoRealTotal,
 } from '../store/finanzas'
 import { fmtCLP } from '../utils/format'
 
+const estadoLabel = (value) => ESTADOS.find((e) => e.value === value)?.label || value
+
 const deudas = computed(() =>
-  state.deudas.map((d) => {
+  state.debts.map((d) => {
     const meses = d.pagoReal > 0 ? Math.ceil(d.saldo / d.pagoReal) : null
     const badge =
-      d.estado === 'Atrasado'
+      d.estado === 'late'
         ? { bg: 'var(--bad-bg)', fg: 'var(--bad)' }
-        : d.estado === 'Pagada'
+        : d.estado === 'paid'
         ? { bg: 'var(--accent-soft)', fg: 'var(--accent)' }
         : { bg: 'var(--good-bg)', fg: 'var(--good)' }
-    return { ...d, mesesLabel: meses ? `${meses} meses restantes` : '—', badge }
+    return { ...d, estadoLabel: estadoLabel(d.estado), mesesLabel: meses ? `${meses} meses restantes` : '—', badge }
   })
 )
 
 function onField(id, field, value) {
-  const row = state.deudas.find((d) => d.id === id)
-  if (!row) return
-  const numFields = ['saldo', 'tasa', 'pagoMin', 'pagoReal']
-  row[field] = numFields.includes(field) ? Number(value) || 0 : value
+  updateDeuda(id, field, value)
 }
 </script>
 
@@ -58,15 +57,18 @@ function onField(id, field, value) {
 
         <div class="deuda-fields">
           <div>
-            <label class="field-label">Tipo</label>
-            <select :value="d.tipo" class="field-input" @change="onField(d.id, 'tipo', $event.target.value)">
-              <option v-for="t in DEUDA_TIPOS" :key="t" :value="t">{{ t }}</option>
-            </select>
+            <label class="field-label">Institución</label>
+            <input
+              :value="d.institucion"
+              class="field-input"
+              placeholder="Ej: Banco Falabella"
+              @change="onField(d.id, 'institucion', $event.target.value)"
+            />
           </div>
           <div>
             <label class="field-label">Estado</label>
             <select :value="d.estado" class="field-input" @change="onField(d.id, 'estado', $event.target.value)">
-              <option v-for="e in ESTADOS" :key="e" :value="e">{{ e }}</option>
+              <option v-for="e in ESTADOS" :key="e.value" :value="e.value">{{ e.label }}</option>
             </select>
           </div>
           <div>
@@ -85,10 +87,20 @@ function onField(id, field, value) {
             <label class="field-label">Pago que harás</label>
             <input type="number" :value="d.pagoReal" class="field-input" @change="onField(d.id, 'pagoReal', $event.target.value)" />
           </div>
+          <div>
+            <label class="field-label">Día de pago</label>
+            <input
+              type="number" min="1" max="31"
+              :value="d.diaPago"
+              class="field-input"
+              placeholder="Ej: 5"
+              @change="onField(d.id, 'diaPago', $event.target.value)"
+            />
+          </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center" style="margin-top: 12px">
-          <span class="badge-pill" :style="{ background: d.badge.bg, color: d.badge.fg }">{{ d.estado }}</span>
+          <span class="badge-pill" :style="{ background: d.badge.bg, color: d.badge.fg }">{{ d.estadoLabel }}</span>
           <span style="font-size: 11px; color: var(--ink-faint)">{{ d.mesesLabel }}</span>
         </div>
       </div>

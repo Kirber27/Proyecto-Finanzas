@@ -6,6 +6,7 @@ import MonthSelector from '../components/MonthSelector.vue'
 import NavIcon from '../components/NavIcon.vue'
 import MobileMenu from '../components/MobileMenu.vue'
 import { authState, displayName, avatarLetter, logout } from '../store/auth'
+import { state as finanzasState } from '../store/finanzas'
 
 const route = useRoute()
 const router = useRouter()
@@ -13,6 +14,7 @@ const router = useRouter()
 const TAB_TITLES = {
   resumen: 'Resumen',
   presupuesto: 'Presupuesto',
+  cuentas: 'Cuentas',
   deudas: 'Deudas',
   metas: 'Metas y ahorro',
   gastos: 'Gastos diarios',
@@ -21,6 +23,7 @@ const TAB_TITLES = {
 const NAV_ITEMS = [
   { name: 'resumen', icon: 'resumen', label: 'Resumen' },
   { name: 'presupuesto', icon: 'presupuesto', label: 'Presupuesto' },
+  { name: 'cuentas', icon: 'cuentas', label: 'Cuentas' },
   { name: 'deudas', icon: 'deudas', label: 'Deudas' },
   { name: 'metas', icon: 'metas', label: 'Metas' },
   { name: 'gastos', icon: 'gastos', label: 'Gastos' },
@@ -33,8 +36,8 @@ function goTo(name) {
   router.push({ name })
 }
 
-function onLogout() {
-  logout()
+async function onLogout() {
+  await logout()
   router.push({ name: 'login' })
 }
 </script>
@@ -54,7 +57,9 @@ function onLogout() {
       </header>
 
       <main style="flex: 1; overflow-y: auto; padding-bottom: 76px; padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px))">
-        <router-view />
+        <p v-if="finanzasState.error" class="finanzas-error">{{ finanzasState.error }}</p>
+        <p v-if="finanzasState.loading" class="finanzas-loading">Cargando tus datos…</p>
+        <router-view v-else />
       </main>
 
       <nav class="bottom-nav">
@@ -136,9 +141,29 @@ function onLogout() {
         </div>
 
         <main style="flex: 1; overflow-y: auto; padding: 26px 32px">
-          <router-view />
+          <p v-if="finanzasState.error" class="finanzas-error">{{ finanzasState.error }}</p>
+          <p v-if="finanzasState.loading" class="finanzas-loading">Cargando tus datos…</p>
+          <router-view v-else />
         </main>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.finanzas-loading {
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 13px;
+  padding: 40px 0;
+}
+.finanzas-error {
+  background: var(--bad-bg);
+  color: var(--bad);
+  border-radius: var(--radius-input-sm, 10px);
+  padding: 10px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+</style>

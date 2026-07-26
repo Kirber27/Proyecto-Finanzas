@@ -30,4 +30,9 @@ defineProps({
     v-else-if="name === 'gastos'"
     :width="size" :height="size" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
   ><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z" /><line x1="8" y1="8" x2="16" y2="8" /><line x1="8" y1="12" x2="16" y2="12" /></svg>
+
+  <svg
+    v-else-if="name === 'cuentas'"
+    :width="size" :height="size" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+  ><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3H5" /><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V10a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z" /><circle cx="16" cy="14" r="1.5" /></svg>
 </template>

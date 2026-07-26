@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { authState } from '../store/auth'
+import { authState, authReady } from '../store/auth'
 
 const routes = [
   {
@@ -15,6 +15,7 @@ const routes = [
       { path: '', redirect: { name: 'resumen' } },
       { path: 'resumen', name: 'resumen', component: () => import('../views/ResumenView.vue') },
       { path: 'presupuesto', name: 'presupuesto', component: () => import('../views/PresupuestoView.vue') },
+      { path: 'cuentas', name: 'cuentas', component: () => import('../views/CuentasView.vue') },
       { path: 'deudas', name: 'deudas', component: () => import('../views/DeudasView.vue') },
       { path: 'metas', name: 'metas', component: () => import('../views/MetasView.vue') },
       { path: 'gastos', name: 'gastos', component: () => import('../views/GastosView.vue') },
@@ -28,7 +29,8 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
+  await authReady
   if (to.meta.requiresAuth && !authState.isAuthenticated) {
     return { name: 'login' }
   }

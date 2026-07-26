@@ -2,26 +2,59 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import ThemeToggle from '../components/ThemeToggle.vue'
-import { login } from '../store/auth'
+import { login, signup } from '../store/auth'
 
 const router = useRouter()
 
+const mode = ref('signin') // 'signin' | 'signup'
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const remember = ref(false)
 const submitted = ref(false)
+const loading = ref(false)
+const formError = ref('')
+const infoMessage = ref('')
 
 const emailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value))
-const passwordValid = computed(() => password.value.length > 0)
+const passwordValid = computed(() => password.value.length >= 6)
 const emailError = computed(() => submitted.value && !emailValid.value)
 const passwordError = computed(() => submitted.value && !passwordValid.value)
 
-function onSubmit() {
+const isSignup = computed(() => mode.value === 'signup')
+const submitLabel = computed(() => {
+  if (loading.value) return isSignup.value ? 'Creando cuenta…' : 'Ingresando…'
+  return isSignup.value ? 'Crear cuenta' : 'Iniciar sesión'
+})
+
+async function onSubmit() {
   submitted.value = true
+  formError.value = ''
+  infoMessage.value = ''
   if (!emailValid.value || !passwordValid.value) return
-  login(email.value)
+
+  loading.value = true
+  const result = isSignup.value ? await signup(email.value, password.value) : await login(email.value, password.value)
+  loading.value = false
+
+  if (result.error) {
+    formError.value = result.error
+    return
+  }
+  if (isSignup.value && result.needsConfirmation) {
+    infoMessage.value = 'Cuenta creada. Revisa tu correo para confirmarla antes de iniciar sesión.'
+    mode.value = 'signin'
+    submitted.value = false
+    return
+  }
   router.push({ name: 'resumen' })
+}
+
+function toggleMode() {
+  mode.value = isSignup.value ? 'signin' : 'signup'
+  formError.value = ''
+  infoMessage.value = ''
+  submitted.value = false
 }
 </script>
 
@@ -73,8 +106,15 @@ function onSubmit() {
           <ThemeToggle with-label />
         </div>
 
-        <h2 style="font-size: 22px; font-weight: 700; color: var(--ink); margin: 0 0 6px">Bienvenido de vuelta</h2>
-        <p style="font-size: 14px; color: var(--ink-soft); margin: 0 0 26px">Ingresa tus datos para continuar</p>
+        <h2 style="font-size: 22px; font-weight: 700; color: var(--ink); margin: 0 0 6px">
+          {{ isSignup ? 'Crea tu cuenta' : 'Bienvenido de vuelta' }}
+        </h2>
+        <p style="font-size: 14px; color: var(--ink-soft); margin: 0 0 26px">
+          {{ isSignup ? 'Ingresa tus datos para registrarte' : 'Ingresa tus datos para continuar' }}
+        </p>
+
+        <p v-if="infoMessage" style="color: var(--good); font-size: 13px; margin: 0 0 16px">{{ infoMessage }}</p>
+        <p v-if="formError" style="color: var(--bad); font-size: 13px; margin: 0 0 16px">{{ formError }}</p>
 
         <form novalidate @submit.prevent="onSubmit">
           <label class="field-label" for="login-email">Correo electrónico</label>
@@ -84,6 +124,7 @@ function onSubmit() {
             type="email"
             placeholder="tucorreo@ejemplo.com"
             class="field-input field-input-lg"
+            :disabled="loading"
             :style="{ marginTop: '6px', marginBottom: emailError ? '4px' : '16px', borderColor: emailError ? 'var(--bad)' : undefined }"
           />
           <p v-if="emailError" style="color: var(--bad); font-size: 12px; margin: 0 0 12px">Ingresa un correo electrónico válido.</p>
@@ -97,6 +138,7 @@ function onSubmit() {
               placeholder="••••••••"
               class="field-input field-input-lg"
               style="padding-right: 52px"
+              :disabled="loading"
               :style="{ borderColor: passwordError ? 'var(--bad)' : undefined }"
             />
             <button
@@ -108,16 +150,20 @@ function onSubmit() {
               {{ showPassword ? 'Ocultar' : 'Mostrar' }}
             </button>
           </div>
-          <p v-if="passwordError" style="color: var(--bad); font-size: 12px; margin: 0 0 10px">Ingresa tu contraseña.</p>
+          <p v-if="passwordError" style="color: var(--bad); font-size: 12px; margin: 0 0 10px">
+            La contraseña debe tener al menos 6 caracteres.
+          </p>
 
-          <div class="d-flex justify-content-between align-items-center" style="margin: 6px 0 22px">
+          <div v-if="!isSignup" class="d-flex justify-content-between align-items-center" style="margin: 6px 0 22px">
             <label class="d-flex align-items-center gap-2" style="font-size: 13px; color: var(--ink-soft)">
               <input v-model="remember" type="checkbox" style="accent-color: var(--accent)" /> Recuérdame
             </label>
             <a href="#" style="font-size: 13px; color: var(--accent); font-weight: 600; text-decoration: none">¿Olvidaste tu contraseña?</a>
           </div>
 
-          <button type="submit" class="btn-fx-primary w-100" style="font-size: 15px">Iniciar sesión</button>
+          <button type="submit" class="btn-fx-primary w-100" style="font-size: 15px" :disabled="loading" :style="isSignup ? { marginTop: '22px' } : undefined">
+            {{ submitLabel }}
+          </button>
         </form>
 
         <div class="d-flex align-items-center gap-3" style="margin: 22px 0">
@@ -126,7 +172,9 @@ function onSubmit() {
           <div style="flex: 1; height: 1px; background: var(--border)"></div>
         </div>
 
-        <button type="button" class="btn-fx-outline w-100">Crear cuenta nueva</button>
+        <button type="button" class="btn-fx-outline w-100" :disabled="loading" @click="toggleMode">
+          {{ isSignup ? 'Ya tengo cuenta, iniciar sesión' : 'Crear cuenta nueva' }}
+        </button>
       </div>
     </div>
   </div>

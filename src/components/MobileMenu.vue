@@ -11,9 +11,9 @@ function close() {
   open.value = false
 }
 
-function onLogout() {
+async function onLogout() {
   close()
-  logout()
+  await logout()
   router.push({ name: 'login' })
 }
 

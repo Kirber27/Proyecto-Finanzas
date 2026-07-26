@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 import MonthSelector from '../components/MonthSelector.vue'
 import {
-  state, updatePresupuestoMonto, totalIngreso, totalGastoPresupuestado,
-  gastoRealPorCategoria, totalGastoReal, saldoEstimado,
+  state, presupuestoActual, updatePresupuestoMonto, updatePresupuesto, addPresupuesto, deletePresupuesto,
+  totalIngreso, totalGastoPresupuestado, gastoRealPorCategoria, totalGastoReal, saldoEstimado,
 } from '../store/finanzas'
 import { fmtCLP, MONTH_NAMES } from '../utils/format'
 
@@ -11,13 +11,13 @@ const mesLabel = computed(() => `${MONTH_NAMES[state.monthIndex]} de ${state.yea
 const gastoRealColor = computed(() => (totalGastoReal.value > totalGastoPresupuestado.value ? 'var(--bad)' : 'var(--ink)'))
 const saldoColor = computed(() => (saldoEstimado.value < 0 ? 'var(--bad)' : 'var(--good)'))
 
-const ingresoRows = computed(() => state.presupuesto.filter((p) => p.tipo === 'ingreso'))
+const ingresoRows = computed(() => presupuestoActual.value.filter((p) => p.tipo === 'ingreso'))
 
 const gastoRows = computed(() =>
-  state.presupuesto
+  presupuestoActual.value
     .filter((p) => p.tipo === 'gasto')
     .map((p) => {
-      const real = gastoRealPorCategoria(p.nombre)
+      const real = gastoRealPorCategoria(p.id)
       const pct = p.monto > 0 ? Math.min(real / p.monto, 1) : real > 0 ? 1 : 0
       const over = p.monto > 0 && real > p.monto
       return {
@@ -44,7 +44,12 @@ function onMontoChange(id, e) {
         <p class="eyebrow" style="margin: 0 0 8px">Ingresos mensuales</p>
         <div class="card-fx card-fx-sm" style="overflow: hidden">
           <div v-for="(row, i) in ingresoRows" :key="row.id" class="d-flex align-items-center gap-2 row-line" :class="{ 'border-top': i > 0 }">
-            <div style="flex: 1; font-size: 13.5px; font-weight: 600; color: var(--ink)">{{ row.nombre }}</div>
+            <input
+              :value="row.nombre"
+              class="field-input-plain"
+              style="flex: 1; font-size: 13.5px; font-weight: 600"
+              @change="updatePresupuesto(row.id, 'nombre', $event.target.value)"
+            />
             <input
               type="number"
               :value="row.monto"
@@ -52,18 +57,27 @@ function onMontoChange(id, e) {
               style="width: 116px; text-align: right; font-weight: 700; color: var(--accent)"
               @change="onMontoChange(row.id, $event)"
             />
+            <button type="button" class="btn-fx-ghost" @click="deletePresupuesto(row.id)" aria-label="Eliminar ingreso">✕</button>
           </div>
           <div class="d-flex justify-content-between total-row" style="background: var(--accent); color: #fff">
             <span>Total ingresos</span><span>{{ fmtCLP(totalIngreso) }}</span>
           </div>
         </div>
+        <button type="button" class="btn-fx-outline w-100 add-btn" @click="addPresupuesto('ingreso')">+ Agregar ingreso</button>
       </div>
 
       <div>
         <p class="eyebrow" style="margin: 0 0 8px">Gastos presupuestados</p>
         <div class="gasto-grid">
           <div v-for="row in gastoRows" :key="row.id" class="card-fx card-fx-sm gasto-card">
-            <p class="gasto-card-nombre">{{ row.nombre }}</p>
+            <div class="d-flex align-items-center gap-2" style="margin-bottom: 8px">
+              <input
+                :value="row.nombre"
+                class="field-input-plain gasto-card-nombre"
+                @change="updatePresupuesto(row.id, 'nombre', $event.target.value)"
+              />
+              <button type="button" class="btn-fx-ghost" style="font-size: 13px" @click="deletePresupuesto(row.id)" aria-label="Eliminar gasto">✕</button>
+            </div>
             <label class="field-label">Monto</label>
             <input
               type="number"
@@ -84,6 +98,7 @@ function onMontoChange(id, e) {
             <p class="gasto-total-value">{{ fmtCLP(totalGastoPresupuestado) }}</p>
           </div>
         </div>
+        <button type="button" class="btn-fx-outline w-100 add-btn" @click="addPresupuesto('gasto')">+ Agregar categoría de gasto</button>
       </div>
     </div>
 
@@ -138,13 +153,17 @@ function onMontoChange(id, e) {
   flex-direction: column;
 }
 .gasto-card-nombre {
+  flex: 1;
+  min-width: 0;
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink);
-  margin: 0 0 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.add-btn {
+  margin-top: 10px;
 }
 .gasto-card-total {
   background: var(--ink);

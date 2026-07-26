@@ -1,13 +1,37 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import {
-  state, gastoCats, gastoHoy, totalGastoReal, gastosDelMes,
-  setGastoForm, addGasto, deleteGasto, MEDIOS,
+  state, gastoCategorias, gastoHoy, totalGastoReal, gastosDelMes,
+  setGastoForm, addGasto, deleteGasto,
 } from '../store/finanzas'
 import { themeState } from '../store/theme'
 import { fmtCLP, colorForCategory, todayISO } from '../utils/format'
 
 const isDark = computed(() => themeState.theme === 'dark')
+
+// Selecciona por defecto la primera cuenta/categoría disponible apenas cargan,
+// para que el formulario quede usable sin que el usuario tenga que elegir cada vez.
+watch(
+  () => state.accounts,
+  (accs) => {
+    if (!state.gastoForm.accountId && accs.length) setGastoForm('accountId', accs[0].id)
+  },
+  { immediate: true }
+)
+watch(
+  gastoCategorias,
+  (cats) => {
+    if (!state.gastoForm.categoryId && cats.length) setGastoForm('categoryId', cats[0].id)
+  },
+  { immediate: true }
+)
+
+function categoriaNombre(categoryId) {
+  return state.categories.find((c) => c.id === categoryId)?.nombre || 'Sin categoría'
+}
+function cuentaNombre(accountId) {
+  return state.accounts.find((a) => a.id === accountId)?.nombre || ''
+}
 
 const gastoGroups = computed(() => {
   const byDate = {}
@@ -39,10 +63,10 @@ const gastoGroups = computed(() => {
         totalFmt: fmtCLP(total),
         items: items.map((g) => ({
           id: g.id,
-          desc: g.descripcion || g.categoria,
-          meta: `${g.categoria} · ${g.medio}`,
+          desc: g.descripcion || categoriaNombre(g.categoryId),
+          meta: `${categoriaNombre(g.categoryId)} · ${cuentaNombre(g.accountId)}`,
           montoFmt: fmtCLP(g.monto),
-          dot: colorForCategory(g.categoria, isDark.value),
+          dot: colorForCategory(categoriaNombre(g.categoryId), isDark.value),
         })),
       }
     })
@@ -95,19 +119,23 @@ function onSubmit() {
           <div class="row-2" style="margin-bottom: 16px">
             <div>
               <label class="field-label">Categoría</label>
-              <select :value="state.gastoForm.cat" class="field-input" @change="setGastoForm('cat', $event.target.value)">
-                <option v-for="cat in gastoCats" :key="cat" :value="cat">{{ cat }}</option>
+              <select :value="state.gastoForm.categoryId" class="field-input" @change="setGastoForm('categoryId', $event.target.value)">
+                <option v-for="cat in gastoCategorias" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
               </select>
             </div>
             <div>
-              <label class="field-label">Medio de pago</label>
-              <select :value="state.gastoForm.medio" class="field-input" @change="setGastoForm('medio', $event.target.value)">
-                <option v-for="med in MEDIOS" :key="med" :value="med">{{ med }}</option>
+              <label class="field-label">Cuenta</label>
+              <select :value="state.gastoForm.accountId" class="field-input" @change="setGastoForm('accountId', $event.target.value)">
+                <option v-for="acc in state.accounts" :key="acc.id" :value="acc.id">{{ acc.nombre }}</option>
               </select>
             </div>
           </div>
 
-          <button type="submit" class="btn-fx-primary w-100">Agregar gasto</button>
+          <p v-if="state.accounts.length === 0" style="color: var(--bad); font-size: 12px; margin: -8px 0 12px">
+            Crea una cuenta primero en la pestaña Cuentas.
+          </p>
+
+          <button type="submit" class="btn-fx-primary w-100" :disabled="state.accounts.length === 0">Agregar gasto</button>
         </form>
       </div>
 
