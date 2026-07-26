@@ -55,7 +55,16 @@ export async function login(email, password) {
 }
 
 export async function signup(email, password) {
-  const { data, error } = await supabase.auth.signUp({ email, password })
+  // Sin esto, el link del correo de confirmación cae al "Site URL" configurado
+  // en el dashboard de Supabase (por defecto localhost:3000) sin importar desde
+  // dónde se registró el usuario. Con esto, el link vuelve al mismo origen
+  // (localhost en dev, el dominio real en producción) — igual hay que agregar
+  // ese dominio a la lista de Redirect URLs permitidas en Supabase.
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${window.location.origin}/login` },
+  })
   if (error) return { error: translateError(error.message), needsConfirmation: false }
   return { error: null, needsConfirmation: !data.session }
 }

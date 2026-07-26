@@ -129,9 +129,17 @@ function onMontoChange(id, e) {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px 24px;
+  min-width: 0;
+}
+.presupuesto-grid > div {
+  min-width: 0;
 }
 .row-line {
   padding: 11px 16px;
+  min-width: 0;
+}
+.row-line input.field-input-plain {
+  min-width: 0;
 }
 .total-row {
   padding: 12px 16px;
@@ -146,11 +154,13 @@ function onMontoChange(id, e) {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+  min-width: 0;
 }
 .gasto-card {
   padding: 14px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 .gasto-card-nombre {
   flex: 1;

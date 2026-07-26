@@ -127,14 +127,17 @@ function onField(id, field, value) {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
+  min-width: 0;
 }
 .deuda-card {
   padding: 16px;
+  min-width: 0;
 }
 .deuda-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+  min-width: 0;
 }
 .add-btn {
   width: 100%;
